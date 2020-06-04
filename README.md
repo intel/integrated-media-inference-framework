@@ -74,7 +74,7 @@ Use the `build.sh` script with the following commands:
   * `IMIF_DOCKER_REGISTRY_USER` - Registry authentication user
   * `IMIF_DOCKER_REGISTRY_PASS` - Registry authentication password
 
-By default the repository is built using a CentOS 7 docker container.<BR>
+By default the repository is built using a CentOS 7 docker container. Make sure Docker is installed on your system to do that.
 To force a native build, the `IMIF_NATIVE_BUILD` environment variable should be defined.
 
 ## Extending IMIF
