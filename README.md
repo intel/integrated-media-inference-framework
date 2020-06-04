@@ -110,6 +110,8 @@ Ubuntu:
 
 ### Building
 
+Make sure Docker is installed. Refer to https://docs.docker.com/engine/install/ for installation instructions.
+
         ./build
         ./build docker
 
