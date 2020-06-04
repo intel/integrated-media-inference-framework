@@ -1,1 +1,6 @@
-# integrated-media-inference-framework
+# Integrated Media Inference Framework
+
+A software framework designed for efficient processing of media and AI inference workloads running on Intel compute platforms.
+
+### Under Constraction - Comming Soon
+
