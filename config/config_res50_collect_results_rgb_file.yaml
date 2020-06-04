@@ -1,0 +1,97 @@
+############## Flows description ################
+flows:
+    -
+        id: [0]
+        name: reference_cpu_fp32
+        source: [0]
+        pipeline: 
+            - { stage: 0, mstream: 0,      next_stage: [1]}
+            - { stage: 1, inference: 0                    }
+    -
+        id: [1]
+        name: results_cpu_int8
+        source: [1]
+        pipeline: 
+            - { stage: 0, mstream: 0,      next_stage: [1]}
+            - { stage: 1, inference: 1                    }
+
+############## Module configurations  ################
+
+#### Media source
+source: 
+    config:
+    -
+        id: [0]
+        name: ilb test0
+        type: file #can be either rtsp or file
+        input: ["../downloads/video/video_resnet50.rgb"]
+        optional:
+            fps: 25
+            width: 224
+            height: 224
+    -
+        id: [1]
+        name: ilb test1
+        type: file #can be either rtsp or file
+        input: ["../downloads/video/video_resnet50.rgb"]
+        optional:
+            fps: 25
+            width: 224
+            height: 224
+
+#### Media stream
+mstream: 
+    config:
+    -
+        id: 0
+        name: file
+        stream_type: file
+        optional:
+            batch_size: 1
+    optional:
+
+
+#### Inference
+inference:
+    config:
+    - 
+        id: 0
+        name: res50_cpu_fp32
+        hw_device_num: 0
+        model_type: resnet50  # for example - "resnet50", "ssd_resnet34", "yolov3", "bchw_bgr", "bchw_rgb", "bhw_grayscale"
+        engine_type: openvino
+        engine_device: CPU #for hetero plugin, use CPU,GPU
+        num_of_inference_requests: 10
+        batch_size: 1
+        model_path: ../downloads/openvino/resnet50_onnx/model.xml
+        inference_rate: -1 #limit ILB output's FPS. 0 means automatic rate limit, -1 means no limit at all
+        inference_input_precision: fp32 # input layer precision. "uint8" or "fp32".
+        optional:
+            openvino_n_threads: 1    #number of threads to use on open-vino inference when using the CPU device
+            result_processing_plugin: libirp_plugin_resnet50.so
+            detection_threshold: 0.58  #minimum threshold for accuracy/probability, must be a number between 0 and 1
+            labels_file: ../downloads/openvino/resnet50_int8/ResNet50-int8.labels
+
+    - 
+        id: 1
+        name: res50_cpu_int8
+        hw_device_num: 0
+        model_type: resnet50  # for example - "resnet50", "ssd_resnet34", "yolov3", "bchw_bgr", "bchw_rgb", "bhw_grayscale"
+        engine_type: openvino
+        engine_device: CPU #for hetero plugin, use CPU,GPU
+        num_of_inference_requests: 10
+        batch_size: 1
+        model_path: ../downloads/openvino/resnet50_onnx/model_stats.xml
+        inference_rate: -1 #limit ILB output's FPS. 0 means automatic rate limit, -1 means no limit at all
+        inference_input_precision: fp32 # input layer precision. "uint8" or "fp32".
+        optional:
+            openvino_n_threads: 1    #number of threads to use on open-vino inference when using the CPU device
+            result_processing_plugin: libirp_plugin_resnet50.so
+            detection_threshold: 0.58  #minimum threshold for accuracy/probability, must be a number between 0 and 1
+            labels_file: ../downloads/openvino/resnet50_int8/ResNet50-int8.labels
+
+    optional:
+        output_rate_control: 0 # enable/disable IRP output's FPS from the client (e.g. external GUI).
+        collect_stats_frames: 0 #if this number is 'x' (where 'x' > 0), openvino will collect statistics for 'x' frames, and will save a new IR (xml/bin) with the gathered statistics  
+        collect_yaml_results_path: ../temp/results/   # specifies path to save yaml results files, empty for no results
+        collect_blob_results_path: ../temp/results/    # specifies path to save csv results files, empty for no results

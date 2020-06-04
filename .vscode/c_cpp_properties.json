@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Default",
+            "includePath": [ 
+                "${workspaceFolder}/common/include",
+                "${workspaceFolder}/_build_/common",
+                "${workspaceFolder}/_build_/common/include",
+                "${workspaceFolder}/_build_/external/protobuf/protobuf-prj-prefix/src/protobuf-prj-build/_install_/include",
+                "${workspaceFolder}/_build_/external/easylogging/easylogging-prj-prefix/src/easylogging-prj-build/_install_/include",
+                "${workspaceFolder}/external/yaml-cpp/include"
+            ],
+            "defines": [
+                "IMIF_VERSION",
+                "IMIF_BUILD_DATE",
+                "IMIF_REVISION"
+            ],
+            "cppStandard": "c++11",
+            "browse": {
+                "path": [ "${workspaceFolder}" ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],    
+    "version": 4
+}

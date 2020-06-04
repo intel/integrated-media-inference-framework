@@ -1,0 +1,58 @@
+syntax = "proto3";
+package imif.messages.msl;
+import "include/messages/proto/enums.proto";
+import "include/messages/proto/types.proto";
+
+
+message PingRequest {}
+message PingResponse {}
+
+message ConnectRequest {}
+message ConnectResponse {
+    uint32 client_id = 1;
+}
+
+message InferRequest {
+    uint32 flow_id = 1;
+    enums.FrameFormat frame_format = 2;
+    types.FramesData frames_data = 3;
+}
+message InferResponse {
+    repeated types.FrameInferResponse frame_infer_response = 1;
+}
+
+message ClientID {
+    uint32 client_id = 1;
+}
+
+message Event {
+    uint32 flow_id = 1;
+    types.ResultReady message = 2;
+}
+
+message SubscriptionRequest {
+    uint32 client_id = 1;
+    uint32 flow_id = 2;
+    uint32 stage_id = 3;
+    bool subscribe = 4;
+}
+
+message SubscriptionResponse {
+    bool success = 1;
+}
+
+message Chunk {
+    uint32 flow_id = 1;
+    bytes content = 2;
+}
+
+enum ChunkResponseOptions {
+    CHUNK_RESPONSE_INVALID = 0;
+    CHUNK_RESPONSE_FAIL = 1;
+    CHUNK_RESPONSE_SUCCESS = 2;
+    CHUNK_RESPONSE_BUSY = 3;
+}
+
+message ChunkResponse {
+    ChunkResponseOptions response = 1;
+}

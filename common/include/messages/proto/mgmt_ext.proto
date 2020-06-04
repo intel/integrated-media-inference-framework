@@ -1,0 +1,146 @@
+syntax = "proto3";
+package imif.messages.mgmt_ext;
+import "include/messages/proto/enums.proto";
+import "include/messages/proto/types.proto";
+
+message ModuleStatus {
+    string module_name = 1;
+    string sub_module = 2;
+    bool enabled = 3;
+    bool registered = 4;
+    int64 wgid = 5;
+}
+
+message ReturnStatus {
+    bool success = 1;
+}
+
+message AllModulesStatusRequest {}
+
+message AllModulesStatus {
+    repeated ModuleStatus module_status = 1; 
+    repeated string topic = 2;
+}
+
+message OutgoingPing {}
+
+message IncomingPing {}
+
+message Event {
+    string module_name = 1;
+    enums.EventType event_type = 2;
+    string message = 3;
+    int64 wgid = 4;
+}
+
+message ListenerIDRequest {}
+
+message ListenID {
+    uint32 listener_id = 1;
+}
+
+message SubscriptionRequest {
+    uint32 listener_id = 1;
+    string topic = 2;
+    bool subscribe = 3;
+    int64 wgid = 4;
+}
+
+message AddWorkgroup {
+    string url = 1;
+    int32 port = 2;
+}
+
+message NameWorkgroup {
+    string wgname = 1;
+    int64 wgid = 2;
+}
+
+message WorkgroupID {
+    int64 wgid = 1;
+}
+
+message SourceAdd {
+    types.Source source = 1;
+    int64 wgid = 2;
+}
+
+message FlowAdd {
+    types.Flow flow = 1;
+    int64 wgid = 2;
+}
+
+message ConfigAdd {
+    types.Config config = 1;
+    int64 wgid = 2;
+}
+
+message RemoveItem {
+    string item_name = 1;
+    uint32 id = 2;
+    string module_name = 3;
+    int64 wgid = 4;
+}
+
+message SetLogLevel {
+    types.ReqID id = 1;
+    string module_name = 2;
+    uint32 log_level = 3;
+    bool new_state = 4;
+    int64 wgid = 5;
+}
+
+message ResetCmd {
+    string module_name = 1;
+    int64 wgid = 2;
+}
+
+message ListRequest {
+    string item_name = 1; // source, flow, config, status (module)
+    string module = 2; // empty for all (or "all") or irrelevant
+    oneof id_or_all {
+        uint32 id = 3;
+        bool all = 4;
+    }
+    int64 wgid = 5;
+}
+
+message ListItem {
+    string module = 1;
+        oneof item {
+            types.Config config = 4;
+            types.Flow flow = 3;
+            types.Source source = 2;
+            ModuleStatus status = 5;
+            string topic = 6;
+        }
+        int64 wgid = 7;
+        string wgname = 8;
+}
+
+message ListResponse {
+    repeated ListItem list_item = 1;
+}
+
+message PushRequest {
+    string filename = 1;
+    string module_name = 2;
+    int64 wgid = 3;
+    bool push_or_pull = 4;
+}
+
+message PushResponse {
+    bool success = 1;
+    int64 tag = 2;
+}
+
+message Chunk {
+    bytes content = 1;
+}
+
+message FileChunk {
+    int64 tag = 1;
+    int64 file_pos = 2;
+    bool is_last_chunk = 3;
+    bytes content = 4;
+}

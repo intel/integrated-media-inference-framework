@@ -1,0 +1,31 @@
+# Docker configuration
+IMIF_DOCKER_REGISTRY="<Registry URL or IP address excluding port. Keep empty to disable registry and use local image>"
+IMIF_DOCKER_REGISTRY_PORT="<Registry port number, example: 5000>"
+IMIF_DOCKER_REGISTRY_USER="<Registry user, example: imif>"
+IMIF_DOCKER_IFACE="<Docker container network interface, example: eth0>"
+IMIF_DOCKER_USE_DHCP="<y/n>"
+IMIF_DOCKER_STATIC_IP="<When not using DHCP, set statis IP address>"
+IMIF_DOCKER_GATEWAY_IP="<When not using DHCP, set statis gateway IP address>"
+
+# These devices will be forwarded to the docker image with --device if they exist on the host platform
+IMIF_DOCKER_DEVICES=(
+    /dev/dri                  
+    /dev/apwr_driver_char_dev 
+)
+
+# Additional options for docker run go here:
+IMIF_DOCKER_RUN_OPTIONS=( 
+    --user imif
+    --env USER=imif
+    --read-only
+    --security-opt=no-new-privileges
+    --pids-limit 1024
+    --memory=8G
+    --restart=no
+    --mount type=tmpfs,target=/tmp,tmpfs-mode=1777
+    --mount type=tmpfs,target=/var/cache,tmpfs-mode=1777
+    --mount type=tmpfs,target=/var/log,tmpfs-mode=1777
+    --mount type=tmpfs,target=/opt/intel/imif/logs,tmpfs-mode=1777
+    --mount type=tmpfs,target=/opt/intel/imif/temp,tmpfs-mode=1777
+    --mount type=bind,source=$PWD/downloads,target=/opt/intel/imif/downloads
+)

@@ -1,0 +1,4 @@
+_build_
+common/autogen
+external
+mdecode/msdk_common

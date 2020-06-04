@@ -1,0 +1,108 @@
+syntax = "proto3";
+package imif.messages.mgmt;
+import "include/messages/proto/types.proto";
+import "google/protobuf/any.proto";
+
+message RegisterRequest {
+    types.ReqID id = 1;
+    string module_name = 2;
+}
+
+message RegisterResponse {
+    types.ReqID id = 1;
+    string module_name = 2;
+    uint32 module_id = 3;
+}
+
+message Enable {
+    types.ReqID id = 1;
+    string module_name = 2;
+    string sub_module = 3;
+    bool enable = 4;
+}
+
+message AddConfig {
+    types.ReqID id = 1;
+    string module_name = 2;
+    types.Config config = 3;
+    int64 wgid = 4;
+}
+
+message Command {
+    types.ReqID id = 1;
+    int64 wgid = 2;
+    types.Command command = 3;
+}
+
+message RemoveConfig {
+    types.ReqID rid = 1;
+    string module_name = 2;
+    uint32 config_id = 3;
+}
+
+message GlobalConfig {
+    string module_name = 1;
+    string log_level = 2;
+    string dump_path = 3;
+    google.protobuf.Any optional_config = 4;
+}
+
+message AddSource {
+    types.ReqID id = 1;
+    types.Source source = 2;
+    string module_name = 3;
+}
+
+message RemoveSource {
+    types.ReqID rid = 1;
+    uint32 source_id = 2;
+}
+
+message StartSource {
+    types.ReqID rid = 1;
+    uint32 source_id = 2;
+    int64 wgid = 3;
+}
+
+message AddFlow {
+    types.ReqID id = 1;
+    types.Flow flow = 2;
+}
+
+message RemoveFlow {
+    types.ReqID id = 1;
+    uint32 flow_id = 2;
+}
+
+message Statistics {
+    string topic = 1;
+    string stat = 2;
+} 
+
+message SetLogLevel {
+    types.ReqID id = 1;
+    string module_name = 2;
+    uint32 log_level = 3;
+    bool new_state = 4;
+}
+
+message ResetMod {
+    types.ReqID id = 1;
+    string module_name = 2;
+}
+
+message SendChunk {
+    uint32 id = 1;
+    string filename = 2;
+    string source_module = 3;
+    string target_module = 4;
+    int64 file_pos = 5;
+    bool is_last_chunk = 6;
+    bytes content = 7;
+}
+
+message AckChunk {
+    uint32 id = 1;
+    bool is_last_chunk = 2;
+    bool success = 3;
+}

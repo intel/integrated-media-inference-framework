@@ -1,0 +1,13 @@
+syntax = "proto3";
+package imif.messages;
+
+// Message opcodes
+import "include/messages/proto/enums.proto";
+
+message broker_subscribe {
+    repeated enums.Opcode opcode = 1;
+}
+
+message broker_unsubscribe {
+    repeated enums.Opcode opcode = 1;
+}

@@ -1,0 +1,48 @@
+syntax = "proto3";
+package imif.messages.inference;
+import "include/messages/proto/types.proto";
+import "include/messages/proto/shmem_manager.proto";
+import "google/protobuf/any.proto";
+
+message Config {
+    int32 hw_device_num = 1;
+    string engine_type = 2;
+    string engine_device = 3;
+    uint32 num_of_inference_requests = 4;
+    uint32 batch_size = 5;
+    string model_path = 6;
+    int32 inference_rate = 7;
+    string model_type = 8;
+    string inference_input_precision = 9;
+    google.protobuf.Any optional_config = 10;
+}
+
+message OptionalConfig {
+    uint32 openvino_n_threads = 1;
+    string result_processing_plugin = 2;
+    double detection_threshold = 3;
+    string labels_file = 4;
+    string ssd_boxes_file = 5;
+    uint32 max_num_of_bounding_boxes = 6;
+    bool hetero_dump_graph_dot = 7;
+    bool always_send_results = 8;
+}
+
+message GlobalConfig {
+    repeated uint32 ignore_flows = 1;
+    string collect_yaml_results_path = 2;
+    string collect_blob_results_path = 3;
+    string collect_stats_path = 4;
+    uint32 collect_stats_frames = 5;
+    bool output_rate_control = 6;
+}
+
+message RemoveConfig {
+    types.ReqID rid = 1;
+    uint32 config_id = 2;
+}
+
+message RawResult {
+    repeated types.FrameReady efr = 1;
+    memory.ShmemBuff buff = 2;
+}

@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 2.8.2)
+
+include(ExternalProject)
+
+ExternalProject_Add(${EXT_PRJ_NAME}
+
+  # Clonse the NNG repo
+  GIT_REPOSITORY "${EXT_PRJ_REPO}"
+  GIT_TAG "${EXT_PRJ_TAG}"
+  GIT_PROGRESS 1
+  
+  # No special commands
+  UPDATE_COMMAND ""
+  PATCH_COMMAND ""
+  TEST_COMMAND ""
+  INSTALL_COMMAND ""
+
+  # CMake arguments
+  CMAKE_ARGS -DLIBVA_DRIVERS_PATH=${EXT_PRJ_INSTALL_DIR}/lib/dri -DCMAKE_INSTALL_PREFIX=${EXT_PRJ_INSTALL_DIR} -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR}
+
+  # Custom build & install commands
+  BUILD_COMMAND make -j4
+  COMMAND make install
+)

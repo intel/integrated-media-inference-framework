@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6cd8d0..5b938d9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -60,7 +60,7 @@ if (build_static_lib)
+             ARCHIVE DESTINATION lib)
+ endif()
+ 
+-export(PACKAGE ${PROJECT_NAME})
++# export(PACKAGE ${PROJECT_NAME})
+ 
+ 
+ ########################################## Unit Testing ###################################

@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 2.8.2)
+
+include(ExternalProject)
+
+ExternalProject_Add(${EXT_PRJ_NAME}
+
+  # Clonse the NNG repo
+  GIT_REPOSITORY "${EXT_PRJ_REPO}"
+  GIT_TAG "${EXT_PRJ_TAG}"
+  GIT_PROGRESS 1
+  GIT_SHALLOW 1
+  TLS_VERIFY 0
+
+  # No special commands
+  TEST_COMMAND ""
+  INSTALL_COMMAND ""
+  
+  # Build in the source dir
+  BUILD_IN_SOURCE 1
+  
+  # Apply patches
+  PATCH_COMMAND bash -c "${EXT_PRJ_PATCH}"
+  
+  # Create missing files
+  UPDATE_COMMAND
+    COMMAND mkdir -p ./src/ngraph
+    COMMAND sed "s|.{NGRAPH_VERSION}|0.0.0|g" ./inference-engine/thirdparty/ngraph/VERSION.in > VERSION
+    COMMAND sed "s|.{NGRAPH_VERSION}|0.0.0|g" ./inference-engine/thirdparty/ngraph/src/ngraph/version.in.hpp > ./src/ngraph/version.hpp
+
+  # Select plugins to build: CPU (MKL_DNN), GPU (CLDNN), Intel Compute Stick (MYRIAD)
+  CONFIGURE_COMMAND ${CMAKE_COMMAND} 
+    -DCMAKE_INSTALL_PREFIX=${EXT_PRJ_INSTALL_DIR} 
+    -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR}
+    -DNGRAPH_INSTALL_LIB=${EXT_PRJ_INSTALL_DIR}/lib
+    -DNGRAPH_INSTALL_INCLUDE=${EXT_PRJ_INSTALL_DIR}/include
+    -DENABLE_OPENCV=OFF
+    -DENABLE_DLIA=OFF
+    -DENABLE_GNA=OFF
+    -DENABLE_MYRIAD=ON
+    -DENABLE_VPU=ON
+    -DENABLE_HDDL=OFF
+    inference-engine
+
+  # Custom build & install commands
+  BUILD_COMMAND make -j16
+  COMMAND make install
+)

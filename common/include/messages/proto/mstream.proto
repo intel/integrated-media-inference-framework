@@ -1,0 +1,31 @@
+syntax = "proto3";
+package imif.messages.mstream;
+import "include/messages/proto/types.proto";
+import "include/messages/proto/enums.proto";
+import "include/messages/proto/shmem_manager.proto";
+import "google/protobuf/any.proto";
+
+message Config {
+    enums.StreamType type = 1;
+    string listening_ip_port = 2;
+    google.protobuf.Any optional_config = 3;
+}
+
+message OptionalConfig {
+    bool rtsp_tcp = 1;
+    uint32 batch_size = 2;
+}
+
+message RemoveConfig {
+    types.ReqID rid = 1;
+    uint32 config_id = 2;
+}
+
+// Events //
+message EventBsReady {
+    uint32 source_id = 1;
+    repeated types.FlowEvent flow = 2;
+    repeated uint64 frame_sizes = 3;
+    bool supports_backpressure = 4;
+    memory.ShmemBuff buff = 5;
+}

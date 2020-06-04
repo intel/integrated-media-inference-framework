@@ -1,0 +1,26 @@
+syntax = "proto3";
+package imif.services.msl;
+import "include/messages/proto/msl.proto";
+import "include/messages/proto/enums.proto";
+
+service StreamingLibrary {
+
+    // ping to check that the connection is valid.
+    rpc Ping (imif.messages.msl.PingRequest) returns (imif.messages.msl.PingResponse) {}
+
+    // Connect and get client ID
+    rpc Connect (imif.messages.msl.ConnectRequest) returns (imif.messages.msl.ConnectResponse) {}
+
+    // Request inference of one or more frames
+    rpc Infer (imif.messages.msl.InferRequest) returns (imif.messages.msl.InferResponse) {}
+
+    // register to get a stream of events, choosen using subscribe.
+    rpc Listen (messages.msl.ClientID) returns (stream messages.msl.Event);
+
+    // subscribe to get events specified by the topics.
+    rpc Subscribe (messages.msl.SubscriptionRequest) returns (messages.msl.SubscriptionResponse) {}
+
+    // Stream a video file
+    rpc StreamFile (stream messages.msl.Chunk) returns (stream messages.msl.ChunkResponse) {}
+
+}

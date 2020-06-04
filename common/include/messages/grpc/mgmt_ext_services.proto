@@ -1,0 +1,66 @@
+syntax = "proto3";
+package imif.services.mgmt_ext;
+import "include/messages/proto/mgmt_ext.proto";
+import "include/messages/proto/mgmt.proto";
+
+service MgmtLibrary {
+
+    // shows what modules are currently registered, and if each of them is enabled or disabled.
+    rpc RequestAllModulesStatus (messages.mgmt_ext.AllModulesStatusRequest) returns (messages.mgmt_ext.AllModulesStatus) {}
+
+    // set a registered module to be enabled/disabled
+    rpc SetModuleStatus (messages.mgmt_ext.ModuleStatus) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // ping to check that the connection is valid.
+    rpc Ping (messages.mgmt_ext.OutgoingPing) returns (messages.mgmt_ext.IncomingPing) {}
+
+    // request a unique listener ID that can later be used to listen to events
+    rpc RequestListenerID (messages.mgmt_ext.ListenerIDRequest) returns (messages.mgmt_ext.ListenID);
+    
+    // register to get a stream of events, choosen using subscribe.
+    rpc Listen (messages.mgmt_ext.ListenID) returns (stream messages.mgmt_ext.Event);
+
+    // subscribe to get events specified by the topics.
+    rpc Subscribe (messages.mgmt_ext.SubscriptionRequest) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // copy files between the machines
+    rpc Push (messages.mgmt_ext.PushRequest) returns (messages.mgmt_ext.PushResponse) {}
+
+    rpc PushFile (messages.mgmt_ext.FileChunk) returns (messages.mgmt_ext.PushResponse) {}
+    
+    rpc Pull (messages.mgmt_ext.PushRequest) returns (stream messages.mgmt_ext.Chunk) {}
+    
+    // Add a workgroup
+    rpc AddWorkgroup (messages.mgmt_ext.AddWorkgroup) returns (messages.mgmt_ext.WorkgroupID) {}
+
+    // Name a workgroup
+    rpc NameWorkgroup (messages.mgmt_ext.NameWorkgroup) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // get workgroup id
+    rpc GetWorkgroupID (messages.mgmt_ext.NameWorkgroup) returns (messages.mgmt_ext.WorkgroupID) {}
+
+    // Add a source
+    rpc SourceAdd (messages.mgmt_ext.SourceAdd) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // start a source
+    rpc SourceStart (messages.mgmt.StartSource) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // Add a Flow
+    rpc FlowAdd (messages.mgmt_ext.FlowAdd) returns (messages.mgmt_ext.ReturnStatus) {}
+
+         // Add a Configuration
+    rpc AddConfig (messages.mgmt.AddConfig) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // Sets the log levels of requested modules.
+    rpc LogLevelSet (messages.mgmt_ext.SetLogLevel) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // remove all pipes streams and flows.
+    rpc Reset (messages.mgmt_ext.ResetCmd) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    // Remove an item
+    rpc Remove (messages.mgmt_ext.RemoveItem) returns (messages.mgmt_ext.ReturnStatus) {}
+
+    rpc List (messages.mgmt_ext.ListRequest) returns (messages.mgmt_ext.ListResponse) {}
+
+    rpc RequestCommand (messages.mgmt.Command) returns (messages.mgmt_ext.ReturnStatus) {}
+}

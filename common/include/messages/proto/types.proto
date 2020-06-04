@@ -1,0 +1,139 @@
+syntax = "proto3";
+package imif.messages.types;
+import "google/protobuf/any.proto";
+import "include/messages/proto/enums.proto";
+import "include/messages/proto/shmem_manager.proto";
+
+message ReqID {
+    uint32 id = 1;
+}
+
+message Config {
+    uint32 id = 1;
+    string name = 2;
+    google.protobuf.Any config = 3;
+}
+
+message CustomConfig {
+    map<string, string> config_map = 1;
+}
+
+message Command {
+    string module_name = 1;
+    uint32 cmd_id = 2;
+    google.protobuf.Any cmd = 3;
+}
+
+message Source {
+    uint32 id = 1;
+    string name = 2;
+    string input = 3;
+    enums.StreamType type = 4;
+    google.protobuf.Any additional_info = 5;
+}
+
+message OptionalSource {
+    uint32 fps = 1;
+    uint32 duplicate_input_files = 2;
+    uint32 input_width = 3;
+    uint32 input_height = 4;
+    bool load_to_ram = 5;
+    uint64 ram_size_mb = 6;
+    float mbps = 7;
+}
+
+message Stage {
+    uint32 id = 1;
+    string module_name = 2;
+    oneof config {
+        uint32 config_id = 3;
+        string config_name = 4;
+    }
+    repeated uint32 next_stage = 5;
+}
+
+message Pipeline {
+    repeated Stage stage = 1;
+}
+
+message Flow {
+    uint32 id = 1;
+    string name = 2;
+    uint32 source_id = 3;
+    Pipeline pipeline = 4;
+}
+
+message FlowEvent {
+    uint32 id = 1;
+    repeated uint32 stage_id = 2;
+}
+
+message Frame {
+    uint64 frame_num = 1;
+    bool is_scaled = 2;
+    uint32 width = 3;
+    uint32 height = 4;
+    string format = 5;
+    uint64 client_context = 6;
+    uint32 sub_frames = 7;
+    BoundingBox source_box = 8;
+} 
+
+message FramesData {
+    repeated FrameData frame_data = 1;
+}
+
+message FrameData {
+    uint64 client_context = 1;
+    bytes payload = 2;
+    uint32 width = 3;
+    uint32 height = 4;
+}
+
+message FrameInfo {
+    FlowEvent flow = 1;
+    Frame frame = 2;
+    bool skip_frame = 3;
+    bool frame_empty = 4;
+    uint64 timestamp = 5;
+}
+
+message FrameInferResponse {
+    uint64 client_context = 1;
+    bool ok = 2;
+}
+
+message BoundingBox {
+    uint32 coordiateX = 1;
+    uint32 coordiateY = 2;
+    uint32 width = 3;
+    uint32 height = 4;
+}
+
+message DetectedObject {
+    string label = 1;
+    float probability = 2;
+    oneof boxes {
+        BoundingBox box = 3;
+    }
+}
+
+message FrameReady {
+    types.FrameInfo frame_info = 1;
+    memory.ShmemBuff buff = 2;
+}
+
+message EventFrameReady {
+    repeated FrameReady efr = 1;
+}
+
+message ResultReady {
+    types.FrameInfo frame_info = 1;
+    repeated types.DetectedObject detected_object = 2;
+    uint64 frame_size = 3;
+}
+
+message EventResultReady {
+    repeated ResultReady results = 1;
+}
+

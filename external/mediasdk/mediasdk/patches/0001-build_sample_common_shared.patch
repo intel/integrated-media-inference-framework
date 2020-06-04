@@ -1,0 +1,15 @@
+diff --git a/samples/sample_common/CMakeLists.txt b/samples/sample_common/CMakeLists.txt
+index 3b6a6194..2dd9657d 100644
+--- a/samples/sample_common/CMakeLists.txt
++++ b/samples/sample_common/CMakeLists.txt
+@@ -3,5 +3,9 @@ include_directories (
+   ${CMAKE_CURRENT_SOURCE_DIR}/../sample_misc/wayland/include
+ )
+ 
+-make_library( shortname universal static )
++set(DEPENDENCIES libmfx dl pthread)
++make_library( sample_common universal shared )
+ set( defs "" )
++
++install( TARGETS sample_common LIBRARY DESTINATION ${MFX_PLUGINS_DIR} )
++install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sample_common)

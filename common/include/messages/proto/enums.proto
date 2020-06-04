@@ -1,0 +1,85 @@
+syntax = "proto3";
+package imif.messages.enums;
+
+enum Consts {
+    INVALID = 0;
+    MAGIC = 0x53D85B7A;
+    TCP_MANAGEMENT_PORT = 9092;
+    TCP_VIDEO_PORT = 9093;
+    TCP_TELEMETRY_PORT = 9094;
+    TCP_BROKER_PORT = 9095;
+}
+
+enum EventType {
+    EVENT_TYPE_INVALID = 0;
+    EVENT_STATS = 1;
+    EVENT_RESULTS = 2;
+}
+
+enum StreamType {
+    STREAM_TYPE_INVALID = 0;
+    RTSP = 1;
+    LOCAL_FILE = 2;
+    IMIF_SL = 3;
+}
+
+
+enum FrameFormat {
+    FRAMEFORMAT_INVALID = 0;
+    NV12 = 1;
+    I420 = 2;
+    RGBA = 3;
+    JPEG = 4;
+    RGB = 5;
+}
+
+enum Opcode {
+    // Invalid message opcode
+    OPCODE_INVALID = 0;
+
+    /////////////////////
+    // Broker Controls //
+    /////////////////////
+    BROKER_SUBSCRIBE   = 0x101;
+    BROKER_UNSUBSCRIBE = 0x102;
+
+    /////////////////////
+    // EVENTS          //
+    /////////////////////
+    INPUT_BS_READY              = 0x301;
+    OUTPUT_BS_READY             = 0x302;
+    INPUT_JPEG_READY            = 0x303;
+    DECODED_FRAME_READY         = 0x304;
+    INFERENCE_RAW_RESULT_READY  = 0x305;
+    INFERENCE_RESULTS_READY     = 0x306;
+    ENCODED_FRAME_READY         = 0x307;
+
+    /////////////////////
+    // Managment       //
+    /////////////////////
+    MGMT_ADD_SOURCE             = 0xF01;
+    MGMT_REMOVE_SOURCE          = 0xF02;
+    MGMT_ADD_FLOW               = 0xF03;
+    MGMT_REMOVE_FLOW            = 0xF04;
+    MGMT_START_FLOW             = 0xF05;
+    MGMT_STOP_FLOW              = 0xF06;
+    MGMT_ADD_CONFIG             = 0xF07;
+    MGMT_REMOVE_CONFIG          = 0xF08;
+    MGMT_GLOBAL_CONFIG          = 0xF09;
+    
+    MGMT_REGISTER_REQUEST       = 0xF0A;
+    MGMT_REGISTER_RESPONSE      = 0xF0B;
+    MGMT_ENABLE                 = 0xF0C;
+    MGMT_SET_LOG_LEVEL          = 0xF0D;
+    MGMT_RESET                  = 0xF0E;
+    MGMT_CUSTOM_COMMAND         = 0xF0F;
+
+    MGMT_PULL_REQUEST           = 0xF10;
+    MGMT_PUSH_REQUEST           = 0xF11;
+    MGMT_PUSH_RESPONSE          = 0xF12;
+    
+    MGMT_EVENT_ERROR            = 0xF80;
+    MGMT_EVENT_STAT_READY       = 0xF81;
+
+    DUMMY_MESSAGE = 0x1000;
+}
