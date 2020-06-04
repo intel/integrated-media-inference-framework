@@ -1,0 +1,103 @@
+############## Flows description ################
+flows:
+    -
+        id: [100]
+        name: grpc_flow
+        source: [100]
+        pipeline: 
+            - { stage: 0, mstream: 100,      next_stage: [1]}
+            - { stage: 1, mdecode: 0,        next_stage: [2,3]}
+            - { stage: 2, inference: 100,        next_stage: [3]}
+            - { stage: 3, tcp_sender: 0                    }
+    -
+        id: [200]
+        name: grpc_flow
+        source: [100]
+        pipeline: 
+            - { stage: 0, mstream: 100,      next_stage: [1]}
+            - { stage: 1, mdecode: 0,        next_stage: [2,3]}
+            - { stage: 2, inference: 100,        next_stage: [3]}
+            - { stage: 3, tcp_sender: 0                    }
+        
+
+############## Module configurations  ################
+
+#### Media source
+source: 
+    config:
+    -
+        id: [100]
+        name: grpc_source
+        type: grpc #supported values: rtsp, grpc, file
+        format: h264
+        
+#### Media stream        
+mstream: 
+    config:
+    -
+        id: 100
+        name: grpc_cfg
+        stream_type: grpc
+        listening_port: 50055 # Default = 50055
+        optional:
+
+    optional:
+ 
+
+#### Media decoder
+mdecode:
+    config:
+    - 
+        id: 0
+        name: conf_1
+        video_type: h264 #h264 h265
+        output_format: nv12 # nv12, i420, rgb4
+        inline_scale: [224, 224]
+        threads_num: 2 # minimum is 2 
+        complete_frame: 0 # 0 disable, 1 enable
+        hw_device_num: -1
+        optional:
+            gen_postproc: 0 # 0 disable, 1 auto, 2 force
+            async_depth: 4  # 1 - 20 (default is 4)
+
+    optional:
+        error_report: True # 0 disable, 1 enable
+
+
+#### Inference
+inference:
+    config:
+    - 
+        id: 100
+        name: res50
+        hw_device_num: 0
+        model_type: resnet50  # for example - "resnet50", "ssd_resnet34", "yolov3", "bchw_bgr", "bchw_rgb", "bhw_grayscale"
+        engine_type: openvino
+        engine_device: CPU #for hetero plugin, use HETERO:GPU,CPU
+        num_of_inference_requests: 10
+        batch_size: 12
+        model_path: ../downloads/openvino/resnet50_int8/ResNet50-int8.xml
+        inference_rate: -1 #limit ILB output's FPS. 0 means automatic rate limit, -1 means no limit at all
+        optional:
+            openvino_n_threads: 1    #number of threads to use on open-vino inference when using the CPU device
+            result_processing_plugin: libirp_plugin_resnet50.so
+            detection_threshold: 0.58  #minimum threshold for accuracy/probability, must be a number between 0 and 1
+            labels_file: ../downloads/openvino/resnet50_int8/ResNet50-int8.labels
+            stats_image_num: 0 #if this number is 'x' (where 'x' > 0), openvino will collect statistics for 'x' frames, and will save a new IR (xml/bin) with the gathered statistics  
+            always_send_results: true # inferece sends results even if there is no next stage, so that it can be intercepted by grpc
+           
+    optional:
+        output_rate_control: 0 # enable/disable IRP output's FPS from the client (e.g. external GUI).
+        collect_stats_frames: 0 #if this number is 'x' (where 'x' > 0), openvino will collect statistics for 'x' frames, and will save a new IR (xml/bin) with the gathered statistics  
+
+        
+#### custom modules
+custom: 
+    -
+        module_name: tcp_sender
+        config:
+        -
+            id: 0
+            name: tcp_sender
+            port: 9093
+            subnet: 192.168.1.0

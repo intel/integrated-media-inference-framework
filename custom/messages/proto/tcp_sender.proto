@@ -1,0 +1,18 @@
+syntax = "proto3";
+package imif.messages.tcp_sender;
+
+enum Events {
+    EVENT_FRAME_READY = 0;
+    MSTREAM_OUT_START  = 1;
+    MSTREAM_OUT_INFO   = 2;
+    MSTREAM_OUT_STOP   = 3;
+    MSTREAM_EVENT_FRAME_READY = 4;
+}
+
+message OutStreamStart {
+    uint32 output_width = 1;
+    uint32 output_height = 2;
+    uint32 output_fps = 3;
+    repeated uint32 flow_id_list = 4;
+}
+

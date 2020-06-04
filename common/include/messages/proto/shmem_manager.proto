@@ -1,0 +1,13 @@
+syntax = "proto3";
+package imif.messages.memory;
+
+//shared memory buff
+message ShmemBuff {
+    uint32 shmkey = 1;
+    uint64 shmsize = 2;
+    uint64 offset = 3;
+    uint64 buff_size = 4;
+    uint64 used_size = 5;
+    uint64 write_count = 7;
+    uint64 wrap_count = 8;
+}

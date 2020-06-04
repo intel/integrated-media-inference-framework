@@ -1,0 +1,10 @@
+  IMAGE_DIRECTORY="<Path to the image directory>"
+  IMAGE_DURATION="<Duration of each image in the video in seconds for example 0.5>"
+  FFMPEG_PRE_FLAGS="-safe 0 -f concat"
+  FFMPEG_ENCODE_FLAGS="-c:v libx264 -crf 18 -r 25 -pix_fmt yuv420p -vf scale=1920:1080"
+  OUTPUT_PATH="<Output Directory>"
+  OUTPUT_FRAMES="<Output Frames for example 9400>"
+  OUTPUT_IMAGE_LIST="<Name of the list file containing all the images for example video_resnet50_h264.lst>"
+  OUTPUT_VIDEO_NAME="<Name of the output video file for example video_resnet50_h264.h264>"
+
+  

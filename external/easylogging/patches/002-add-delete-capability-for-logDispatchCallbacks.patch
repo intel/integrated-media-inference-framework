@@ -1,0 +1,53 @@
+From 2fbeb95efc5ab27ac1e4da2ce634da6976c02927 Mon Sep 17 00:00:00 2001
+From: Semyon Barenboym <semyonx.barenboym@intel.com>
+Date: Wed, 11 Sep 2019 10:02:33 +0300
+Subject: [PATCH] Add delete capability for logDispatchCallbacks
+
+Signed-off-by: Semyon Barenboym <semyonx.barenboym@intel.com>
+---
+ src/easylogging++.cc | 11 ++++++++---
+ src/easylogging++.h  |  1 +
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/easylogging++.cc b/src/easylogging++.cc
+index d763ee7..9b5fbd4 100644
+--- a/src/easylogging++.cc
++++ b/src/easylogging++.cc
+@@ -2490,14 +2490,19 @@ void LogDispatcher::dispatch(void) {
+   }
+   LogDispatchCallback* callback = nullptr;
+   LogDispatchData data;
+-  for (const std::pair<std::string, base::type::LogDispatchCallbackPtr>& h
+-       : ELPP->m_logDispatchCallbacks) {
+-    callback = h.second.get();
++  std::unordered_map<std::string, base::type::LogDispatchCallbackPtr>::iterator h = ELPP->m_logDispatchCallbacks.begin();
++  while (h != ELPP->m_logDispatchCallbacks.end()) {
++    callback = h->second.get();
+     if (callback != nullptr && callback->enabled()) {
+       data.setLogMessage(m_logMessage);
+       data.setDispatchAction(m_dispatchAction);
+       callback->handle(&data);
+     }
++    if (callback != nullptr && callback->m_shouldUninstall) {
++        h = ELPP->m_logDispatchCallbacks.erase(h);
++    } else {
++      h++;
++    }
+   }
+ }
+ 
+diff --git a/src/easylogging++.h b/src/easylogging++.h
+index 688d537..d1c30c2 100644
+--- a/src/easylogging++.h
++++ b/src/easylogging++.h
+@@ -2179,6 +2179,7 @@ class LogDispatchCallback : public Callback<LogDispatchData> {
+  protected:
+   virtual void handle(const LogDispatchData* data);
+   base::threading::Mutex& fileHandle(const LogDispatchData* data);
++  bool m_shouldUninstall = false;
+  private:
+   friend class base::LogDispatcher;
+   std::unordered_map<std::string, std::unique_ptr<base::threading::Mutex>> m_fileLocks;
+-- 
+2.17.1
+

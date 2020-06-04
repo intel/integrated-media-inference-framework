@@ -1,0 +1,123 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "presentation" : { "echo": true, },
+    "options": {
+        "cwd": "${workspaceRoot}",
+        "env": {
+            // "VERBOSE": "1",
+            // "IMIF_DOCKER_BUILD": "1"
+        }
+    },
+    "tasks": [
+        {
+            "label": "Build",
+            "command": "/bin/bash",
+            "args": ["./build.sh"],
+            "group": "build",
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["absolute"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Build All",
+            "command": "/bin/bash",
+            "args": ["./build.sh"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["absolute"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Clean",
+            "command": "/bin/bash",
+            "args": ["./build.sh", "clean"],
+            "problemMatcher":"$tsc",
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Dist Clean",
+            "command": "/bin/bash",
+            "args": ["./build.sh", "distclean"],
+            "problemMatcher":"$tsc",
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Pack",
+            "command": "/bin/bash",
+            "args": ["./build.sh", "pack"],
+            "problemMatcher":"$tsc",
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Proto Only",
+            "command": "/bin/bash",
+            "args": ["./build.sh", "proto"],
+            "problemMatcher":"$tsc",
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Docker Build",
+            "command": "/bin/bash",
+            "args": ["./build.sh", "docker"],
+            "problemMatcher":"$tsc",
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Docker Push",
+            "command": "/bin/bash",
+            "args": ["./build.sh", "docker_push"],
+            "problemMatcher":"$tsc",
+            "presentation": {
+                "focus": true
+            }
+        },
+        {
+            "label": "Run Tests",
+            "command": "/bin/bash",
+            "args": ["./build.sh", "test"],
+            "problemMatcher":"$tsc",
+            "presentation": {
+                "focus": true
+            }
+        }        
+    ]
+}

@@ -1,0 +1,14 @@
+.vscode/*
+!.vscode/tasks.json
+!.vscode/c_cpp_properties.json
+__install__
+__pycache__
+_archives_
+/*build*
+!/build.sh
+temp
+bin
+*.o
+*.so*
+*.pyc
+env.sh

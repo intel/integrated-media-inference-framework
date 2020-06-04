@@ -1,0 +1,30 @@
+syntax = "proto3";
+package imif.messages.mdecode;
+import "include/messages/proto/types.proto";
+import "google/protobuf/any.proto";
+
+message Config {
+    string video_type = 1;
+    string output_format = 2;
+    uint32 inline_scale_width = 3;
+    uint32 inline_scale_height = 4;
+    uint32 threads_num = 5;
+    bool complete_frame = 6;
+    int32 hw_device_num = 7;
+    google.protobuf.Any optional_config = 8;
+}
+
+message OptionalConfig {
+    uint32 async_depth = 1;
+    uint32 gen_postproc = 2;
+    uint32 batch_size = 3;
+}
+
+message GlobalConfig {
+    bool error_report = 1;
+}
+
+message RemoveConfig {
+    types.ReqID rid = 1;
+    uint32 config_id = 2;
+}

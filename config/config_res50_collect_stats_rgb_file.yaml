@@ -1,0 +1,63 @@
+############## Flows description ################
+flows:
+    -
+        id: [0]
+        name: test 0
+        source: [0]
+        pipeline: 
+            - { stage: 0, mstream: 0,      next_stage: [1]}
+            - { stage: 1, inference: 0                    }
+
+############## Module configurations  ################
+
+#### Media source
+source: 
+    config:
+    -
+        id: [0]
+        name: ilb test
+        type: file #supported values: rtsp, grpc, file
+        input: ["../downloads/video/video_resnet50.rgb"]
+        optional:
+            fps: 0
+            width: 224
+            height: 224
+mstream: 
+    config:
+    -
+        id: 0
+        name: input_from_file
+        stream_type: file
+        optional:
+            batch_size: 1
+
+    optional:
+
+
+#### Inference
+inference:
+    config:
+    - 
+        id: 0
+        name: resnet50_cfg
+        hw_device_num: 0
+        model_type: resnet50  # for example - "resnet50", "ssd_resnet34", "yolov3", "bchw_bgr", "bchw_rgb", "bhw_grayscale"
+        engine_type: openvino
+        engine_device: CPU
+        num_of_inference_requests: 10
+        batch_size: 1
+        model_path:  ../downloads/openvino/resnet50_onnx/model.xml
+        inference_rate: -1 #limit ILB output's FPS. 0 means automatic rate limit, -1 means no limit at all
+        inference_input_precision: fp32 # input layer precision. "uint8" or "fp32".
+        optional:
+            openvino_n_threads: 1    #number of threads to use on open-vino inference when using the CPU device
+            result_processing_plugin: libirp_plugin_resnet50.so
+            detection_threshold: 0.58  #minimum threshold for accuracy/probability, must be a number between 0 and 1
+            labels_file: ../downloads/openvino/resnet50_int8/ResNet50-int8.labels
+            max_num_of_bounding_boxes: 3
+           
+    optional:
+        output_rate_control: 0 # enable/disable IRP output's FPS from the client (e.g. external GUI).
+        collect_stats_path: ../temp/stats/  #specifies the path to save the output statistics
+        collect_stats_frames: 1000 #if this number is 'x' (where 'x' > 0), openvino will collect statistics for 'x' frames, and will save a new IR (xml/bin) with the gathered statistics  
+        
