@@ -4,7 +4,7 @@ A Linux C++ reference software framework that enables integrated Media & AI-infe
 Designed for dense multi stream media analytics processing with flexible and dynamic pipeline configuration.
 
 Key features:<br>
-•	Event based microservices architecture allowing simple integration of external logic.<br>
+•	Event based micro-services architecture allowing simple integration of external logic.<br>
 •	Multi flow / multi pipeline deployment using a single yaml configuration file.<br>
 •	RTSP, gRPC and file media input stream processing including JPEG and h264 video. <br>
 •	gRPC management interface, enabling operations such as add/remove flow and pipeline configuration.<br>
@@ -20,7 +20,7 @@ Key features:<br>
     .
     +-- _build_                   # Compiled files and build artifacts
     +-- _archives_                # Location of packed archives containing the contained/dockerized binaries
-    +-- .vscode                   # Visual Studio Code related envrionment files and configuration
+    +-- .vscode                   # Visual Studio Code related environment files and configuration
     +-- broker                    # Broker service (pub/sub bus implementation)
     +-- cli                       # Command Line Interface tool for interacting with IMIF management
     +-- common                    # Commonly used utilities and includes
@@ -32,7 +32,7 @@ Key features:<br>
     |   +-- mediasdk              # Intel Media SDK provides hardware acceleration for video processing
     |   +-- opencv                # Open Source Computer Vision Library
     |   +-- openvino              # OpenVINO Toolkit - Deep Learning Deployment Toolkit
-    |   +-- protobuf              # Google Protobuf messaging service
+    |   +-- protobuf              # Google protobuf messaging service
     |   +-- replxx                # readline replacement
     |
     +-- mdecode                   # Video Decoder service
@@ -40,7 +40,7 @@ Key features:<br>
     |   +-- plugins               # Post-inference plugins
     |
     +-- lib
-    |   +-- mgmt                  # Managament Library - Serves as an example for how to communicate with
+    |   +-- mgmt                  # Management Library - Serves as an example for how to communicate with
     |   |                         # a running IMIF instance in order to perform management operations, such
     |   |                         # as adding and removing flows.
     |   +-- msl                   # Media Streaming Library - Serves as an example for how to communicate
@@ -51,13 +51,13 @@ Key features:<br>
     +-- rtsp_client               # Interface for RTSP client. Implement this to enable inference from RTSP.
     +-- yaml                      # YAML parsing library
     +-- tutorial                  # Example files
-    +-- env.sh.example            # Example for how to write `env.sh`
+    +-- env.sh.example            # Example for how to write env.sh script
     +-- README.md                 # This file
 
 ## Building
 
-Clone the repository and initialize the submodules:<br>
-`git clone ssh://git@gitlab.devtools.intel.com:29418/dea-avei-idc/imif-oss.git`
+Clone the repository:<br>
+`git clone https://github.com/intel/integrated-media-inference-framework.git`
 
 
 Refer to `env.sh.example` for the configuration needed. You can either create the file `env.sh` with these configurations or set the environment variable `IMIF_ENV_FILE` to point to one.
@@ -68,7 +68,7 @@ Use the `build.sh` script with the following commands:
 * `./build.sh clean` - Clean only IMIF projects
 * `./build.sh pack` - Archive the built artifacts into a `tar.gz` file
 * `./build.sh rsync` - Send the artifacts via rsync. Set `IMIF_DEST_RSYNC` environment variable and `RSYNC_RSH` if needed.
-* `./build.sh docker` - Build a Docker container with all the artifacts (requires installed Docker server and access permissions)
+* `./build.sh docker` - Build a Docker container with all the artifacts (requires installed Docker daemon and access permissions for the current user)
 * `./build.sh docker_push` - Build a docker container and push it into a registry.<br> Registry address and credentials can be specified using environment variables:<br>
   * `IMIF_DOCKER_REGISTRY` - Registry address (e.g. registry.intel.com:5000)
   * `IMIF_DOCKER_REGISTRY_USER` - Registry authentication user
@@ -81,11 +81,11 @@ To force a native build, the `IMIF_NATIVE_BUILD` environment variable should be 
 
 ### Management and Streaming Libraries
 
-IMIF exposes a management interface to allow management operations such as configuring media pipelines. It also exposes a Media Streaming interface allowing delivery and collection of media and data over network interface. Both interfaces use gRPC so any language supporting gRPC can be used. Use the proto files under `common/include/messages/grpc`. C++ binding is provided by way of two libraries under `lib/` directory,documented in the reference manual in file `lib/docs/refman.pdf`.
+IMIF exposes a management interface to allow management operations such as configuring media pipelines. It also exposes a Media Streaming interface allowing delivery and collection of media and data over network interface. Both interfaces use gRPC so any language supporting gRPC can be used. Use the proto files under `common/include/messages/grpc`. C++ binding is provided by way of two libraries under `lib/` directory, documented in the reference manual in file `lib/docs/refman.pdf`.
 
 ### RTSP
 
-IMIF supports RTSP for media delivery via the interface defined in `rtsp_client` directory. In order to enable RTSP, you should replace the stub witn an implementation using an RTSP client library of your choosing. An example of such library is myRtspClient (https://github.com/simonbaren/myRtspClient/commit/4260e7f000b662c361aa0dde8ea260c322cbb607).
+IMIF supports RTSP for media delivery via the interface defined in `rtsp_client` directory. In order to enable RTSP, you should replace the stub with an implementation using an RTSP client library of your choosing. An example of such library is myRtspClient (https://github.com/simonbaren/myRtspClient/commit/4260e7f000b662c361aa0dde8ea260c322cbb607).
 
 ### Intel GPU support
 
@@ -131,7 +131,7 @@ Make sure Docker is installed. Refer to https://docs.docker.com/engine/install/ 
         cp <this-repository>/scripts/imif_docker.rc .
         mkdir downloads
 
-2. For this tutorial we will use the pretrained `mobilenet-ssd` from OpenVINO™ Toolkit Open Model Zoo repository. The repository at https://github.com/opencv/open_model_zoo includes instructions on how to download the models. You'd end with two files in the directory `public/mobilenet-ssd/FP32`, namely `mobilenet-ssd.xml` and `mobilenet-ssd.bin`. You also need a text file with the labels, one label per line. You can prepare one yourself based on the pre-trained model repository, or download a copy from https://github.com/intel/ros2_openvino_toolkit/blob/cd8aba4e97f96da60655391e89021400d6a4ba8f/data/labels/object_detection/mobilenet-ssd.labels .Save this file under the name `mobilenet-ssd_labels.txt`. Place all three files in a directory `downloads/openvino/mobilenet-ssd_fp32/`.
+2. For this tutorial we will use the pre-trained `mobilenet-ssd` from OpenVINO™ Toolkit Open Model Zoo repository. The repository at https://github.com/opencv/open_model_zoo includes instructions on how to download the models. You'd end with two files in the directory `public/mobilenet-ssd/FP32`, namely `mobilenet-ssd.xml` and `mobilenet-ssd.bin`. You also need a text file with the labels, one label per line. You can prepare one yourself based on the pre-trained model repository, or download a copy from https://github.com/intel/ros2_openvino_toolkit/blob/cd8aba4e97f96da60655391e89021400d6a4ba8f/data/labels/object_detection/mobilenet-ssd.labels .Save this file under the name `mobilenet-ssd_labels.txt`. Place all three files in a directory `downloads/openvino/mobilenet-ssd_fp32/`.
 
 3. Download some car images in jpeg format and place them under `downloads/`. The `downloads` folder by default is mounted in the IMIF docker.
 
@@ -141,7 +141,6 @@ Make sure Docker is installed. Refer to https://docs.docker.com/engine/install/ 
 
         ./imif_docker.sh init
         ./imif_docker.sh pull imif-xxxxx:0.0.0-yyy-zzzzzzzz
-
 
 6. Start the IMIF docker:
 
@@ -160,12 +159,10 @@ Make sure Docker is installed. Refer to https://docs.docker.com/engine/install/ 
         load ../config/config_mobilenet-ssd_grpc.yaml
         enable all
 
-
 9. Subscribe to see inference results for flow 100:
 
         msl connect
         msl subscribe 100
-
 
 10. Send all JPEG images in `../downloads/` for inference in flow 100:
 
